@@ -6,6 +6,12 @@
 ;; approach which extends to other languages too. I recorded a
 ;; screencast about this: https://www.youtube.com/watch?v=TbIHRHy7_JM
 
+(defvar myPackages
+  '(better-defaults                 ;; Set up some better Emacs defaults
+    elpy                            ;; Emacs Lisp Python Environment
+    material-theme                  ;; Theme
+    )
+  )
 
 (setq auto-mode-alist
       (append '(("SConstruct\\'" . python-mode)
@@ -38,6 +44,13 @@
 
 (when (maybe-require-package 'reformatter)
   (reformatter-define black :program "black"))
+
+;; disable warning when starting python-interpreter
+;; (setq python-shell-completion-native-enable 0)
+(setq python-shell-completion-native-enable nil)
+
+;; Enable elpy
+(elpy-enable)
 
 (provide 'init-python)
 ;;; init-python.el ends here
