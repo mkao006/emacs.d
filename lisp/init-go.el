@@ -1,59 +1,6 @@
-;;; package --- Summary
-;; (use-package go-mode
-;;              :ensure t
-;;              :hook ((go-mode . lsp-deffered)
-;;                     (go-mode . company-mode))
-;;              :config
-;;              (require 'lsp-go)
-;;              (add-to-list exec-path "~/go/bin/")
-;;              )
-
-
-
-
-
-;; enable company mode for autocompletion
-;; (add-hook 'go-mode-hook (lambda ()
-;;                           (set (make-local-variable 'company-backends) '(gopls))
-;;                           (company-mode)))
-
-;; ;; enable flycheck
-;;   (add-hook 'go-mode-hook 'flycheck-mode)
-
-
-;; ;;company mode setting
-;; (require 'company)                                   ; load company mode
-;; (require 'company-go)                                ; load company mode go backend
-;; (setq company-idle-delay 0)
-;; (setq company-minimum-prefix-length 1)
-;; ;; enable company mode for autocompletion
-;; (add-hook 'go-mode-hook (lambda ()
-;;                           (set (make-local-variable 'company-backends) '(company-go))
-;;                           (company-mode)))
-
-
-
-
-
-;; (add-hook 'go-mode-hook #'lsp-deferred)
-
-;; ;; Set up before-save hooks to format buffer and add/delete imports.
-;; ;; Make sure you don't have other gofmt/goimports hooks enabled.
-;; (defun lsp-go-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
-;; (require 'lsp-mode)
-;; (add-hook 'go-mode-hook #'lsp-deferred)
-
-;; ;; Set up before-save hooks to format buffer and add/delete imports.
-;; ;; Make sure you don't have other gofmt/goimports hooks enabled.
-;; (defun lsp-go-install-save-hooks ()
-;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
+;; Source :
+;; https://www.youtube.com/watch?v=UFPD7icMoHY
+;; https://gist.github.com/ntBre/34e3d2daad59040b4549cd8057f304c3
 
 (require 'lsp-mode)
 (require 'yasnippet)
@@ -70,15 +17,29 @@
   (lsp-enable-which-key-integration t)
   )
 
+
+;; link compile to go build , test, vet
+(defun my-go-mode-hook ()
+  ; Call Gofmt before saving
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  ; Customize compile command to run go build
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v && go test -v && go vet"))
+  ; Godef jump key binding
+  ;; (local-set-key (kbd "M-.") 'godef-jump)
+  ;; (local-set-key (kbd "M-*") 'pop-tag-mark)
+)
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
 ;;; Go
 (use-package go-mode
   :ensure t
   :hook ((go-mode . lsp-deferred)
          (go-mode . company-mode)
          (go-mode . yas-minor-mode))
-  ;; :bind (:map go-mode-map
-  ;;             ("<f6>"  . gofmt)
-  ;;             ("C-c 6" . gofmt))
+  :bind (:map go-mode-map
+              ("M-q" . gofmt))
   :config
   ;; (require 'lsp-go)
   ;; ;; https://github.com/golang/tools/blob/master/gopls/doc/analyzers.md
