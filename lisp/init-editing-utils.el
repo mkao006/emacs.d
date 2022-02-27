@@ -4,9 +4,6 @@
 
 (require-package 'unfill)
 
-(when (fboundp 'electric-pair-mode)
-  (add-hook 'after-init-hook 'electric-pair-mode))
-(add-hook 'after-init-hook 'electric-indent-mode)
 
 (maybe-require-package 'list-unicode-display)
 
