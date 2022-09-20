@@ -150,7 +150,7 @@
   (add-hook 'after-init-hook 'global-eldoc-mode))
 
 (require 'init-direnv)
-
+(require 'init-protobuf)
 
 
 ;; Allow access from emacsclient
